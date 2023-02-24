@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>Enter a movie to search for</title>
+</head>
+<body>
+
+<p>Welcome, <?= $_SESSION['displayname'] ?>! <a href="#" onclick = 'confirmLogout()'>Log off</a></p>
+
+
+<form action="./search.php" method="post">
+Keywords: <input type="text" name="searchString" required><br>
+<button type="submit" value = "Search">
+<button type="reset" name = "clear" value = "Clear">
+<button onclick="./index.php" name = "cancel" value = "Cancel">
+</form>
+</body>
+
