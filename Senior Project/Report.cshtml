@@ -1,0 +1,398 @@
+﻿@model DomainHistoryViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SurveyHistory</title>
+    <script>
+        $(function () {
+            $("#accordion").accordion({
+                collapsible: true,
+                active: false
+            });
+        });
+    </script>
+    <script>
+        function checkFilter() {
+            var checkboxes = document.querySelectorAll('input[type=checkbox][name="filter"]:checked');
+            var filterString = "";
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                filterString = filterString + "," + checkboxes[i].value;
+            }
+            document.getElementById("filterString").value = filterString;
+        }
+    </script>
+
+    <style>
+        .city {
+            display: none
+        }
+        .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+            .active, .accordion:hover {
+                background-color: #ccc;
+            }
+
+        .panel {
+            padding: 0 18px;
+            display: none;
+            background-color: white;
+            overflow: hidden;
+        }
+
+        #myBtn {
+            display: none;
+            position: fixed;
+            top: 120px;
+            left: 30px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: red;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+            #myBtn:hover {
+                background-color: #555;
+            }
+    </style>
+</head>
+
+<body>
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+    <div style="margin-bottom:10px">
+        <a asp-controller="Survey" asp-action="SurveyHistory" class="btn btn-lg btn-primary">
+            Back
+        </a>
+    </div>
+
+    <h1 style="font-size: 35px; font-weight: 800; text-align: center; margin-bottom:10px">Report Preview</h1>
+    
+    <div class="w3-container">
+
+        <i onclick="document.getElementById('id01').style.display='block'" class="fa fa-key" style="font-size:24px; color:gold" aria-hidden="true"></i>
+
+        <div id="id01" class="w3-modal" style="margin-top: 55px">
+            <div class="w3-modal-content w3-card-4 w3-animate-zoom">
+                <header class="w3-container w3-blue">
+                    <span onclick="document.getElementById('id01').style.display='none'"
+                          class="w3-button w3-blue w3-xlarge w3-display-topright">&times;</span>
+                    <h2>Answer Key</h2>
+                </header>
+
+                <div class="w3-bar w3-border-bottom">
+                    <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '-1')">-1</button>
+                    <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '0')">0</button>
+                    <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '1')">1</button>
+                    <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '2')">2</button>
+                    <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '3')">3</button>
+                    <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '4')">4</button>
+                    <button class="tablink w3-bar-item w3-button" onclick="openCity(event, '5')">5</button>
+                </div>
+
+                <div id="-1" class="w3-container city">
+                    <h3>LEVEL -1</h3>
+                    <p>Not Answered</p>
+                </div>
+
+                <div id="0" class="w3-container city">
+                    <h3>LEVEL 0</h3>
+                    <p>Does Not Apply</p>
+                </div>
+
+                <div id="1" class="w3-container city">
+                    <h3>LEVEL 1</h3>
+                    <p>Strongly Disagree</p>
+                    <p>Our program has not addressed this area.</p>
+                </div>
+
+                <div id="2" class="w3-container city">
+                    <h3>LEVEL 2</h3>
+                    <p>Disagree</p>
+                    <p>Our program is just beginning to work in this area.</p>
+                </div>
+
+                <div id="3" class="w3-container city">
+                    <h3>LEVEL 3</h3>
+                    <p>Neutral</p>
+                    <p>Our program has done some work on this standard.</p>
+                </div>
+
+                <div id="4" class="w3-container city">
+                    <h3>LEVEL 4</h3>
+                    <p>Agree</p>
+                    <p>Our program frequently demonstrates this standard, but needs consistency.</p>
+                </div>
+
+                <div id="5" class="w3-container city">
+                    <h3>LEVEL 5</h3>
+                    <p>Strongly Agree</p>
+                    <p>Our program is clearly proficient with this standard and can demonstrate proficiency in observable ways.</p>
+                </div>
+
+                <div class="w3-container w3-light-grey w3-padding">
+                    <button class="w3-button w3-right w3-white w3-border"
+                            onclick="document.getElementById('id01').style.display='none'">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("GetReport", "Survey", FormMethod.Post))
+    {
+        <p style="font-size: 20px; margin-top:10px">Filter Report By Answer Values:</p>
+        <div class="row">
+            <input id="filterString" type="hidden" asp-for="filter" class="form-control" required />
+            <div class="form-check col-xs-12">
+                <label for="filter_NAN" style="font-size: 18px"><input style="transform: scale(1.5); margin:4px" onchange="checkFilter()" id="filter_NAN" class="cardCheckBox" name="filter" type="checkbox" value="-1" checked> -1 </label>
+            </div>
+            <div class="form-check col-xs-12">
+                <label for="filter_0" style="font-size: 18px"><input style="transform : scale(1.5); margin:4px" onchange="checkFilter()" id="filter_0" class="cardCheckBox" name="filter" type="checkbox" value="0" checked> 0 </label>
+            </div>
+            <div class="form-check col-xs-12">
+                <label for="filter_1" style="font-size: 18px"><input style="transform : scale(1.5); margin:4px" onchange="checkFilter()" id="filter_1" class="cardCheckBox" name="filter" type="checkbox" value="1" checked> 1 </label>
+            </div>
+            <div class="form-check col-xs-12">
+                <label for="filter_2" style="font-size: 18px"><input style="transform : scale(1.5); margin:4px" onchange="checkFilter()" id="filter_2" class="cardCheckBox" name="filter" type="checkbox" value="2" checked> 2 </label>
+            </div>
+            <div class="form-check col-xs-12">
+                <label for="filter_3" style="font-size: 18px"><input style="transform : scale(1.5); margin:4px" onchange="checkFilter()" id="filter_3" class="cardCheckBox" name="filter" type="checkbox" value="3" checked> 3 </label>
+            </div>
+            <div class="form-check col-xs-12">
+                <label for="filter_4" style="font-size: 18px"><input style="transform : scale(1.5); margin:4px" onchange="checkFilter()" id="filter_4" class="cardCheckBox" name="filter" type="checkbox" value="4" checked> 4 </label>
+            </div>
+            <div class="form-check col-xs-12">
+                <label for="filter_5" style="font-size: 18px"><input style="transform: scale(1.5); margin: 4px" onchange="checkFilter()" id="filter_5" class="cardCheckBox" name="filter" type="checkbox" value="5" checked> 5 </label>
+            </div>
+            <input type="hidden" name="instanceId" value="@Model.SurveyAnswers.First().SurveyInstanceId" />
+            <input style="margin-left:15px" type="submit" id="btnSubmit" value="Download Report" />
+        </div>
+    }
+
+    <div id="PrintPDF">
+        <h2 style="text-align: center; margin-top:25px">@Model.SurveyAnswers.First().SurveyName - Submitted on @Model.SurveyAnswers.First().SubmissionDate </h2>
+
+        @foreach (var domain in Model.SurveyAnswers.Distinct(new QuestionInfoDomainComparer()))
+        {
+            <h2 style="text-align: center; font-weight: bold">@domain.DomainName</h2>
+            @foreach (var topic in Model.SurveyAnswers.Where(p => p.DomainId == domain.DomainId).Distinct(new QuestionInfoTopicComparer()))
+            {
+                var questions = Model.SurveyAnswers.Where(p => p.TopicId == topic.TopicId);
+                int green = 0;
+                int yellow = 0;
+                int red = 0;
+                int grey = 0;
+                int index = 0;
+                int[] colorArray = new int[questions.Count()];
+                string[] questionArray = new string[questions.Count()];
+                foreach (var question in questions)
+                {
+                    if (question.Answer <= 2 && question.Answer > 0)
+                    {
+                        red++;
+                        colorArray[index] = 0;
+                    }
+                    else if (question.Answer == 3)
+                    {
+                        yellow++;
+                        colorArray[index] = 1;
+                    }
+                    else if (question.Answer <= 0)
+                    {
+                        grey++;
+                        colorArray[index] = 3;
+                    }
+                    else
+                    {
+                        green++;
+                        colorArray[index] = 2;
+                    }
+                    questionArray[index] = question.QuestionPrompt;
+                    index += 1;
+                }
+                index = 0;
+                <table class="table table-bordered table-condensed">
+                    @if (red >= green && red >= yellow && red >= grey)
+                    {
+                        <tr class="table-danger">
+                            <!--red-->
+                            <td style="font-weight: bold">@topic.TopicName</td>
+                            <td style="font-weight: bold">Answers</td>
+                        </tr>
+                    }
+                    else if (yellow >= green && yellow >= grey)
+                    {
+                        <tr class="table-warning">
+                            <!--yellow-->
+                            <td style="font-weight: bold">@topic.TopicName</td>
+                            <td style="font-weight: bold">Answers</td>
+                        </tr>
+                    }
+                    else if (green >= grey)
+                    {
+                        <tr class="table-success">
+                            <!--green-->
+                            <td style="font-weight: bold">@topic.TopicName</td>
+                            <td style="font-weight: bold">Answers</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="table-secondary">
+                            <!--grey-->
+                            <td style="font-weight: bold">@topic.TopicName</td>
+                            <td style="font-weight: bold">Answers</td>
+                        </tr>
+                    }
+                    @for (int i = 1; i <= colorArray.Length; i++)
+                    {
+
+                        @if (colorArray[i - 1] == 0)
+                        {
+                            <tr class="table-danger category@(questions.ElementAt(i-1).Answer)">
+                                <!--red-->
+                                <td>@((char)(i + 96) + ". " + questionArray[i - 1])</td>
+                                <td>@questions.ElementAt(i - 1).Answer</td>
+                            </tr>
+                        }
+                        else if (colorArray[i - 1] == 1)
+                        {
+                            <tr class="table-warning category@(questions.ElementAt(i-1).Answer)">
+                                <!--yellow-->
+                                <td>@((char)(i + 96) + ". " + questionArray[i - 1])</td>
+                                <td>@questions.ElementAt(i - 1).Answer</td>
+                            </tr>
+                        }
+                        else if (colorArray[i - 1] == 2)
+                        {
+                            <tr class="table-success category@(questions.ElementAt(i-1).Answer)">
+                                <!--green-->
+                                <td>@((char)(i + 96) + ". " + questionArray[i - 1])</td>
+                                <td>@questions.ElementAt(i - 1).Answer</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr class="table-secondary category@(questions.ElementAt(i-1).Answer)">
+                                <!--grey-->
+                                <td>@((char)(i + 96) + ". " + questionArray[i - 1])</td>
+                                <td>@questions.ElementAt(i - 1).Answer</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+
+            @if (Model.Comments.Count(p => p.DomainId == domain.DomainId) > 0)
+            {
+                <h3 style="text-align:center">Comments</h3>
+                <table class="table">
+                    @foreach (var comment in Model.Comments.Where(p => p.DomainId == domain.DomainId))
+                    {
+                        <tr>
+                            <td>@comment.UpdatedBy</td>
+                            <td>@comment.Comment</td>
+                            <td>@comment.TimeOfComment</td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <h3 style="text-align:center">--There are no comments for this domain--</h3>
+                <br />
+            }
+
+        }
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            //filtering answers
+            $(".cardCheckBox").change(function () {
+                var value = $(this).val();
+                if (this.checked == true) {
+                    $(".category" + value).show();
+                } else {
+                    $(".category" + value).hide();
+                }
+            });
+            //submit to pdf
+            $("#btnSubmit").click(function () {
+                $("input[name='GetReportData']").val($("#PrintPDF").html());
+
+            });
+            $("#PrintPDF").load(function () {
+
+                $("#filter-category1").prop("checked", true);
+                $("#filter-category2").prop("checked", true);
+                $("#filter-category3").prop("checked", true);
+                $(".category0").hide()
+                $(".category4").hide()
+                $(".category5").hide()
+
+            });
+        });
+    </script>
+    <script>
+        //Get the button
+        var mybutton = document.getElementById("myBtn");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+    <script>
+        document.getElementsByClassName("tablink")[0].click();
+
+        function openCity(evt, cityName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("city");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < x.length; i++) {
+                tablinks[i].classList.remove("w3-light-grey");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.classList.add("w3-light-grey");
+        }
+    </script>
+</body>
+
+    <!--Note: Add message if user had no completed surveys-->
+    <!--Can be viewed by site users and program admins-->

@@ -1,0 +1,85 @@
+﻿@model DomainViewModel
+@{
+    ViewBag.Title = "Edit Domain";
+    Layout = "_SuperAdminLayout";
+}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        h1 {
+            font-size: 35px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 26px;
+        }
+
+        h4 {
+            font-size: 24px;
+        }
+
+        @@media screen and (max-width: 600px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            h3 {
+                font-size: 20px;
+            }
+
+            h4 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+@if (Model.Code == 3)
+{
+    <h1>Add Domain</h1>
+}
+else
+{
+    <h1>Edit Domain</h1>
+}
+<br />
+<h3><strong>Current Survey:</strong> @Model.SurveyName</h3>
+<h4><strong>Max Recommended Order:</strong> @Model.Count</h4>
+<form asp-action="EditDomain" method="post">
+    <input type="hidden" asp-for="@Model.Domain.DomainId" />
+    <input type="hidden" asp-for="@Model.Domain.SurveyId" />
+    <div class="form-group">
+        <label asp-for="@Model.Domain.DomainName">Domain Name</label>
+        <div><span asp-validation-for="@Model.Domain.DomainName" class="text-danger"></span></div>
+        <textarea asp-for="@Model.Domain.DomainName" class="form-control"></textarea>
+        <label asp-for="@Model.Domain.DomainPreamble">Domain Preamble</label>
+        <div><span asp-validation-for="@Model.Domain.DomainPreamble" class="text-danger"></span></div>
+        <textarea asp-for="@Model.Domain.DomainPreamble" class="form-control"></textarea>
+        <label asp-for="@Model.Domain.Active">Active</label>
+        <div><span asp-validation-for="@Model.Domain.Active" class="text-danger"></span></div>
+        <select asp-for="@Model.Domain.Active">
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+        </select>
+        <div><span asp-validation-for="@Model.Domain.DomainOrder" class="text-danger"></span></div>
+        <label asp-for="@Model.Domain.DomainOrder">Domain Order</label>
+        <textarea asp-for="@Model.Domain.DomainOrder" class="form-control"></textarea>
+        <br />
+
+        @if (Model.Code == 3)
+        {
+            <div class="text-center">
+                <button class="btn btn-primary" onclick="return confirmation('Are you sure you want to add the domain?  Press OK to continue and press cancel to stop the action.')" type="submit">Save</button>
+                <a asp-action="ViewSurvey" class="btn btn-default">Cancel</a>
+            </div>
+        }
+        else
+        {
+            <div class="text-center">
+                <button class="btn btn-primary" onclick="return confirmation('Are you sure you want to edit the domain?  Press OK to continue and press cancel to stop the action.')" type="submit">Save</button>
+                <a asp-action="ViewSurveys" class="btn btn-default">Cancel</a>
+            </div>
+        }
+    </div>
+</form>
