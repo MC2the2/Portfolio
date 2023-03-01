@@ -1,0 +1,9 @@
+Matthew Campbell:
+As a Site admin, I want to use my Google account to sign in the system so the account creation process can be easier.  - stretch goal
+As a Program Admin, I want to be able to delete users who no longer work for my organization.
+As a Program Admin, I want to be able to change the admin privileges before I leave the organization.
+As a Program Admin, I want to view plans of previous surveys just in case there are any action items that I forgot to take.
+As a Program Admin, I want to print out the action plans so that I can have it whenever I am in a room where there are no computers.
+As a Program Admin, I want to download the action plans so I do not have to use a browser to access them.
+As a Program Admin, I want other program admins in my organization to look at my surveys and action plans so that they can compare their results and we can collaborate on any action items that we both need to do.  - if program has multiple locations?
+As a Program Admin, I want my employees to be able to do the survey from the phone in the case that I am away from computers.
